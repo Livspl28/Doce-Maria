@@ -1,5 +1,5 @@
 <?php 
-// 1. Inclui o cabeçalho
+
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'partials' . DIRECTORY_SEPARATOR . 'header.php';
 
 // 2. Conexão com a base de dados
@@ -14,16 +14,13 @@ if ($conn->connect_error) {
     die("Falha na conexão: " . $conn->connect_error);
 }
 
-// 3. Captura o id_produto vindo da URL (?id_produto=123)
+
 $id_produto = $_GET['id_produto'] ?? null;
 
 if (!$id_produto) {
-    // Se não receber o id_produto pela URL, volta para a lista
     header('Location: produtos.php');
     exit;
 }
-
-// 4. Consulta o produto no banco filtrando pela coluna id_produto
 $id_produto_safe = $conn->real_escape_string($id_produto);
 $sql = "SELECT * FROM produtos WHERE id_produto = '$id_produto_safe'";
 $resultado = $conn->query($sql);
@@ -33,8 +30,6 @@ if (!$resultado) {
 }
 
 $produto = $resultado->fetch_assoc();
-
-// Se o produto não existir no banco
 if (!$produto) {
     echo "<div style='text-align:center; padding: 50px;'>";
     echo "<h2>Produto não encontrado!</h2>";
@@ -90,7 +85,7 @@ $descricao = $produto['descricao'] ?? 'Sem descrição disponível para este pro
 
     <main class="container-detalhes">
         <div class="detalhes-foto">
-            <img src="img/<?php echo htmlspecialchars($imagem); ?>" alt="<?php echo htmlspecialchars($nome); ?>" class="detalhes-img">
+            <img src="img_produtos/<?php echo htmlspecialchars($imagem); ?>" alt="<?php echo htmlspecialchars($nome); ?>" class="detalhes-img">
         </div>
 
         <div class="detalhes-info">

@@ -1,8 +1,6 @@
 <?php 
-// 1. CARREGA O CABEÇALHO
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'partials' . DIRECTORY_SEPARATOR . 'header.php';
 
-// 2. CONEXÃO COM A BASE DE DADOS
 $host = 'localhost';
 $usuario = 'root';
 $senha = ''; 
@@ -13,19 +11,34 @@ $conn = new mysqli($host, $usuario, $senha, $banco);
 if ($conn->connect_error) {
     die("Falha na conexão: " . $conn->connect_error);
 }
-// 3. CONSULTA OS PRODUTOS (SEM REPETIDOS)
+
 $categoria_selecionada = $_GET['categoria'] ?? '';
 
 if (!empty($categoria_selecionada)) {
     $categoria_safe = $conn->real_escape_string($categoria_selecionada);
-    // GROUP BY nome_produto garante que cada nome só aparece uma vez
+
     $sql = "SELECT * FROM produtos WHERE categoria = '$categoria_safe' GROUP BY nome_produto";
 } else {
-    // DISTINCT ou GROUP BY remove os produtos com nomes duplicados
+
     $sql = "SELECT * FROM produtos GROUP BY nome_produto";
 }
 
 $resultado = $conn->query($sql);
+
+session_start();
+if (!isset($_SESSION['quantidade'])) {
+    $_SESSION['quantidade'] = 1;
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao'])) {
+    if ($_POST['acao'] === 'mais') {
+        $_SESSION['quantidade']++;
+    } elseif ($_POST['acao'] === 'menos' && $_SESSION['quantidade'] > 1) {
+        $_SESSION['quantidade']--;
+    }
+}
+
+$novoValor = $_SESSION['quantidade'];
 ?>
 
 <!DOCTYPE html>
@@ -39,17 +52,19 @@ $resultado = $conn->query($sql);
 </head>
 <body>
 
-    <main class="pagina-produtos">
+    <main>
         <h1>Ver todos</h1>
 
+
+
+
         <div class="layout-conteudo">
-            <!-- MENU LATERAL DE CATEGORIAS (FILTRO AUTOMÁTICO) -->
             <aside class="sidebar-categorias">
                 <h2>Categorias</h2>
                 <form method="GET" action="" id="form-filtro">
                     <ul>
                         <?php 
-                        $categorias = ['Alfajor', 'Brigadeiro', 'Brownie', 'Bolos', 'Cannoli', 'Cupcakes', 'Donuts', 'Eclair', 'Macaron', 'Pirulitos'];
+                        $categorias = ['Brigadeiro', 'Brownies', 'Bolos', 'Cupcakes', 'Donuts', 'Macaron', 'Pirulitos'];
                         foreach ($categorias as $cat): 
                             $checked = ($categoria_selecionada === $cat) ? 'checked' : '';
                         ?>
@@ -80,7 +95,7 @@ $resultado = $conn->query($sql);
                         $preco  = $produto['preco'] ?? 0;
                         $imagem = $produto['img_produto'] ?? $produto['imagem'] ?? 'cookie.png';
                 ?>
-                        <div class="card-donuts">
+                        <div class="card-produtos">
                             <img src="img-produtos/<?php echo htmlspecialchars($imagem); ?>" alt="<?php echo htmlspecialchars($nome); ?>" class="img-produto">
                             
                             <!-- Nome -->
@@ -93,10 +108,12 @@ $resultado = $conn->query($sql);
                             <div class="acoes-card">
                                 <a href="detalhes.php?id_produto=<?php echo $produto['id_produto']; ?>" class="btn-compre">Compre</a>
                                 <div class="contador-qtd">
-                                    <button type="button" class="btn-qtd btn-menos">-</button>
-                                    <span class="qtd-valor">1</span>
-                                    <button type="button" class="btn-qtd btn-mais">+</button>
-                                </div>
+        <form method="POST" action="">
+            <button type="submit" name="acao" value="menos" class="btn-menos">-</button>
+            <span class="qtd-valor"><?php echo $novoValor; ?></span>
+            <button type="submit" name="acao" value="mais" class="btn-mais">+</button>
+        </form>
+    </div>
                             </div>
                         </div>
                 <?php 
@@ -109,26 +126,6 @@ $resultado = $conn->query($sql);
         </div>
     </main>
 
-    <!-- SCRIPT JAVASCRIPT PARA OS BOTÕES DE + E - FUNCIONAREM -->
-    <script>
-        document.querySelectorAll('.contador-qtd').forEach(container => {
-            const btnMenos = container.querySelector('.btn-menos');
-            const btnMais  = container.querySelector('.btn-mais');
-            const spanQtd  = container.querySelector('.qtd-valor');
-
-            btnMais.addEventListener('click', () => {
-                let valor = parseInt(spanQtd.textContent);
-                spanQtd.textContent = valor + 1;
-            });
-
-            btnMenos.addEventListener('click', () => {
-                let valor = parseInt(spanQtd.textContent);
-                if (valor > 1) {
-                    spanQtd.textContent = valor - 1;
-                }
-            });
-        });
-    </script>
 
 </body>
 </html>

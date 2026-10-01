@@ -1,5 +1,5 @@
 body {
-    background-color: #e2b595; 
+    background-color: #fdeef9; 
     font-family: sans-serif;
 }
 
@@ -10,7 +10,7 @@ body {
 }
 
 .sidebar-categorias {
-    background: #ffffff;
+    background: #eed8e9;
     padding: 15px;
     border-radius: 10px;
     width: 180px;
@@ -28,7 +28,7 @@ body {
     flex-grow: 1;
 }
 
-.card-donuts {
+.card-produtos{
     background: #ffffff;
     padding: 15px;
     border-radius: 15px;
@@ -55,6 +55,7 @@ body {
     padding: 5px 10px;
     border-radius: 5px;
     cursor: pointer;
+    text-decoration: none;
 }
 
 p{

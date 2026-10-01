@@ -67,8 +67,5 @@ button{
 button:hover{
     background-color:#b1617d;
     transform: scale(1.1);
-    transition: 0.4s ease, box-shadow 0.4s ease;
-    
-   box-shadow:-5px 10px 10px 0px #f9c7d0d7;   
+       
 }
-

@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./css/pacote.css">
+    <link rel="stylesheet" href="pacote.css">
     <link rel="stylesheet" href="./css/bia.css">
-    
     <title>Pacotes Buffet</title>
 </head>
+
+
 <body>
 <?php 
        require_once __DIR__ . DIRECTORY_SEPARATOR . 'partials' . DIRECTORY_SEPARATOR . 'header.php';
@@ -28,7 +29,7 @@
 1 bolo tamanho médio(sabor de sua preferencia)<br>
 3 doces de sua escolha</h2><br>
 <p>Veja mais sobre este pacote no botão</p>
-<a href="pacote_deta.php"><button>Ver pacote</button></a>
+<!-- <a href="detalhes.php"><button>Ver pacote</button></a> -->
 </div>
 
  <div class="card-pacote">
